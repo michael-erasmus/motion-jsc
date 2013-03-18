@@ -1,18 +1,20 @@
 class EvalResult
   attr :value
+  attr :exception
 
-  def initialize(context, value_ref)
+  def initialize(context, value_ref, exception)
     @context = context
-    set_value(value_ref)
+    @value = get_value(value_ref)
+    @exception = get_value(exception) || exception if exception
   end
 
   def successful?
-    true
+   @exception.nil?
   end
 
   private
-  def set_value(value_ref)
-    @value = case JSValueGetType(@context, value_ref)
+  def get_value(value_ref)
+    case JSValueGetType(@context, value_ref)
     when KJSTypeNumber then JSValueToNumber(@context, value_ref, nil)
     when KJSTypeString then
       js_string_arg = JSValueToStringCopy(@context, value_ref, nil)

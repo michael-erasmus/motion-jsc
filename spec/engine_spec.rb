@@ -18,7 +18,11 @@ describe "engine" do
     result.value.should == '1'
   end
 
-  it "returns nil if an exception ocurred" do
-    @engine.run("foo() + bar()").should == nil
+  it "is unsucessfull if an exception ocurred" do
+    @engine.run("foo() + bar()").should.not.be.successful
+  end
+
+  it "has an exception if one is thrown" do
+    @engine.run('throw "oh crap!"').exception.should == 'oh crap!'
   end
 end
